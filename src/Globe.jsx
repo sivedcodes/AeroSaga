@@ -40,27 +40,27 @@ function Globe() {
         latitude: 13.0827,
       },
       {
-        name: "Drone 08 - Kochi",
+        name: "Drone 04 - Kochi",
         longitude: 76.2673,
         latitude: 9.9312,
       },
       {
-        name: "Drone 09 - Ahmedabad",
+        name: "Drone 05 - Ahmedabad",
         longitude: 72.5714,
         latitude: 23.0225,
       },
       {
-        name: "Drone 10 - Jaipur",
+        name: "Drone 06 - Jaipur",
         longitude: 75.7873,
         latitude: 26.9124,
       },
       {
-        name: "Drone 11 - Visakhapatnam",
+        name: "Drone 07 - Visakhapatnam",
         longitude: 83.2185,
         latitude: 17.6868,
       },
       {
-        name: "Drone 12 - Lucknow",
+        name: "Drone 08 - Lucknow",
         longitude: 80.9462,
         latitude: 26.8467,
       },
