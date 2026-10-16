@@ -1,14 +1,18 @@
-import { useEffect, useRef } from "react";
-import {
-  Viewer,
-  Cartesian3,
-  Color,
-  CallbackProperty,
-  JulianDate,
-} from "cesium";
+import { useState, useEffect, useMemo, useRef } from "react";
+import { Viewer, Cartesian3, Color } from "cesium";
 import "cesium/Build/Cesium/Widgets/widgets.css";
 function Globe() {
   const containerRef = useRef(null);
+  const viewerRef = useRef(null);
+  const [count] = useState(50);
+  const [showLabels] = useState(true);
+  const drones = useMemo(() => {
+    return Array.from({ length: count }, (_, i) => ({
+      id: i + 1,
+      longitude: 75 + (i % 10) * 0.8,
+      latitude: 12 + Math.floor(i / 10) * 2,
+    }));
+  }, [count]);
   useEffect(() => {
     const viewer = new Viewer(containerRef.current, {
       animation: false,
@@ -20,67 +24,55 @@ function Globe() {
       navigationHelpButton: false,
       infoBox: false,
       selectionIndicator: false,
-
-      scene3DOnly: true,
     });
-
-    viewer.scene.morphTo3D(0);
-
-    viewer.scene.globe.show = true;
-
+    viewerRef.current = viewer;
     viewer.camera.flyTo({
       destination: Cartesian3.fromDegrees(78.4867, 17.385, 2000000),
       duration: 2,
     });
-
-    const startTime = JulianDate.clone(viewer.clock.currentTime);
-    for (let i = 0; i < 50; i++) {
-      const startLongitude = 75 + (i % 10) * 0.8;
-      const startLatitude = 12 + Math.floor(i / 10) * 2;
-      const radius = 0.1 + (i % 5) * 0.03;
-      const speed = 0.2 + (i % 5) * 0.05;
-      const phase = i * 0.5;
-      const movingPosition = new CallbackProperty((time) => {
-        const seconds = JulianDate.secondsDifference(time, startTime);
-        const angle = phase + seconds * speed;
-        const longitude = startLongitude + radius * Math.cos(angle);
-        const latitude = startLatitude + radius * Math.sin(angle);
-        return Cartesian3.fromDegrees(longitude, latitude, 500);
-      }, false);
+    return () => {
+      viewer.destroy();
+      viewerRef.current = null;
+    };
+  }, []);
+  useEffect(() => {
+    const viewer = viewerRef.current;
+    if (!viewer) return;
+    viewer.entities.removeAll();
+    drones.forEach((drone) => {
       viewer.entities.add({
-        id: `drone-${i + 1}`,
-        name: `Drone ${String(i + 1).padStart(2, "0")}`,
-        position: movingPosition,
+        name: `Drone ${drone.id}`,
+        position: Cartesian3.fromDegrees(drone.longitude, drone.latitude, 500),
         point: {
-          pixelSize: 7,
+          pixelSize: 8,
           color: Color.LIME,
           outlineColor: Color.WHITE,
           outlineWidth: 1,
         },
-        label: {
-          text: `D${i + 1}`,
-          font: "10px sans-serif",
-          fillColor: Color.WHITE,
-          outlineColor: Color.BLACK,
-          outlineWidth: 2,
-          style: 2,
-          pixelOffset: new Cartesian3(0, -12, 0),
-          scaleByDistance: undefined,
-        },
+        label: showLabels
+          ? {
+              text: `D${drone.id}`,
+              font: "10px sans-serif",
+              fillColor: Color.WHITE,
+              outlineColor: Color.BLACK,
+              outlineWidth: 2,
+              style: 2,
+            }
+          : undefined,
       });
-    }
-    return () => {
-      if (!viewer.isDestroyed()) {
-        viewer.destroy();
-      }
-    };
-  }, []);
+    });
+  }, [drones, showLabels]);
   return (
     <div
       ref={containerRef}
       style={{
-        width: "100%",
+        position: "fixed",
+        top: 0,
+        left: 0,
+        width: "100vw",
         height: "100vh",
+        margin: 0,
+        padding: 0,
         overflow: "hidden",
       }}
     />
