@@ -1,10 +1,14 @@
 import { useEffect, useRef } from "react";
-import { Viewer, Cartesian3, Color } from "cesium";
+import {
+  Viewer,
+  Cartesian3,
+  Color,
+  CallbackProperty,
+  JulianDate,
+} from "cesium";
 import "cesium/Build/Cesium/Widgets/widgets.css";
-
 function Globe() {
   const containerRef = useRef(null);
-
   useEffect(() => {
     const viewer = new Viewer(containerRef.current, {
       animation: false,
@@ -14,103 +18,72 @@ function Globe() {
       homeButton: false,
       sceneModePicker: false,
       navigationHelpButton: false,
-      infoBox: true,
-      selectionIndicator: true,
+      infoBox: false,
+      selectionIndicator: false,
+
+      scene3DOnly: true,
     });
 
+    viewer.scene.morphTo3D(0);
+
+    viewer.scene.globe.show = true;
+
     viewer.camera.flyTo({
-      destination: Cartesian3.fromDegrees(78.4867, 17.385, 12000000),
+      destination: Cartesian3.fromDegrees(78.4867, 17.385, 2000000),
       duration: 2,
     });
 
-    const drones = [
-      {
-        name: "Drone 01 - Hyderabad",
-        longitude: 78.4867,
-        latitude: 17.385,
-      },
-      {
-        name: "Drone 02 - Bangalore",
-        longitude: 77.5946,
-        latitude: 12.9716,
-      },
-      {
-        name: "Drone 03 - Chennai",
-        longitude: 80.2707,
-        latitude: 13.0827,
-      },
-      {
-        name: "Drone 04 - Kochi",
-        longitude: 76.2673,
-        latitude: 9.9312,
-      },
-      {
-        name: "Drone 05 - Ahmedabad",
-        longitude: 72.5714,
-        latitude: 23.0225,
-      },
-      {
-        name: "Drone 06 - Jaipur",
-        longitude: 75.7873,
-        latitude: 26.9124,
-      },
-      {
-        name: "Drone 07 - Visakhapatnam",
-        longitude: 83.2185,
-        latitude: 17.6868,
-      },
-      {
-        name: "Drone 08 - Lucknow",
-        longitude: 80.9462,
-        latitude: 26.8467,
-      },
-    ];
-
-    drones.forEach((drone) => {
+    const startTime = JulianDate.clone(viewer.clock.currentTime);
+    for (let i = 0; i < 50; i++) {
+      const startLongitude = 75 + (i % 10) * 0.8;
+      const startLatitude = 12 + Math.floor(i / 10) * 2;
+      const radius = 0.1 + (i % 5) * 0.03;
+      const speed = 0.2 + (i % 5) * 0.05;
+      const phase = i * 0.5;
+      const movingPosition = new CallbackProperty((time) => {
+        const seconds = JulianDate.secondsDifference(time, startTime);
+        const angle = phase + seconds * speed;
+        const longitude = startLongitude + radius * Math.cos(angle);
+        const latitude = startLatitude + radius * Math.sin(angle);
+        return Cartesian3.fromDegrees(longitude, latitude, 500);
+      }, false);
       viewer.entities.add({
-        name: drone.name,
-
-        position: Cartesian3.fromDegrees(drone.longitude, drone.latitude, 500),
-
+        id: `drone-${i + 1}`,
+        name: `Drone ${String(i + 1).padStart(2, "0")}`,
+        position: movingPosition,
         point: {
-          pixelSize: 13,
+          pixelSize: 7,
           color: Color.LIME,
           outlineColor: Color.WHITE,
-          outlineWidth: 2,
-          disableDepthTestDistance: Number.POSITIVE_INFINITY,
+          outlineWidth: 1,
         },
-
         label: {
-          text: drone.name,
-          font: "14px sans-serif",
+          text: `D${i + 1}`,
+          font: "10px sans-serif",
           fillColor: Color.WHITE,
           outlineColor: Color.BLACK,
-          outlineWidth: 3,
+          outlineWidth: 2,
           style: 2,
-          pixelOffset: new Cartesian3(0, -22, 0),
-          disableDepthTestDistance: Number.POSITIVE_INFINITY,
+          pixelOffset: new Cartesian3(0, -12, 0),
+          scaleByDistance: undefined,
         },
       });
-    });
-
+    }
     return () => {
       if (!viewer.isDestroyed()) {
         viewer.destroy();
       }
     };
   }, []);
-
   return (
     <div
       ref={containerRef}
       style={{
         width: "100%",
         height: "100vh",
-        margin: 0,
-        padding: 0,
+        overflow: "hidden",
       }}
     />
   );
 }
-
 export default Globe;
