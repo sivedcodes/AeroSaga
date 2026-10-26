@@ -242,10 +242,6 @@ function Globe() {
           minWidth: 250,
         }}
       >
-        <h2 style={{ margin: "0 0 10px", fontSize: 20 }}>
-          AeroSaga - Drone Mission Control
-        </h2>
-
         <p>WebSocket: {status}</p>
         <p>Last GPS: {lastGPS}</p>
         <p>Total Drones: {count}</p>
