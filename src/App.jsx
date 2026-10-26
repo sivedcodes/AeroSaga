@@ -1,5 +1,6 @@
 import Globe from "./Globe";
 import "./App.css";
+import WorkflowPanel from "./WorkflowPanel";
 
 function App() {
   return (
@@ -7,6 +8,7 @@ function App() {
       <h1 className="heading">AeroSaga - Drone Mission Control</h1>
 
       <Globe />
+      <WorkflowPanel />
     </div>
   );
 }

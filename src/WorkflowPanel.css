@@ -1,0 +1,160 @@
+.workflow-panel {
+  position: absolute;
+  top: 20px;
+  right: 22px;
+  width: 350px;
+  padding: 24px 18px 18px;
+  box-sizing: border-box;
+  background: #07111f;
+  color: #f8fafc;
+  border: 1px solid #263449;
+  border-radius: 17px;
+  box-shadow: 0 10px 35px rgba(0, 0, 0, 0.35);
+  z-index: 1000;
+  font-family: "Segoe UI", Arial, sans-serif;
+}
+
+.workflow-panel h2 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.mission-id {
+  margin: 16px 0 22px;
+  color: #a5b4c8;
+  font-size: 13px;
+}
+
+.workflow-divider {
+  height: 1px;
+  background: #263449;
+  margin-bottom: 22px;
+}
+
+.step {
+  display: flex;
+  gap: 13px;
+  min-height: 84px;
+}
+
+.step-timeline {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 37px;
+  flex-shrink: 0;
+}
+
+.step-icon {
+  width: 37px;
+  height: 37px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 13px;
+  box-sizing: border-box;
+  font-size: 14px;
+}
+
+.step-icon.completed {
+  background: #10382f;
+  color: #34d399;
+  border: 1px solid #10b981;
+}
+
+.step-icon.active {
+  background: #2054df;
+  color: #bfdbfe;
+  border: 1px solid #3b82f6;
+}
+
+.step-icon.pending {
+  background: #172438;
+  color: #cbd5e1;
+  border: 1px solid #7b8ba1;
+}
+
+.step-line {
+  width: 2px;
+  flex: 1;
+  min-height: 30px;
+  margin: 4px 0;
+  background: #334155;
+}
+
+.step-content {
+  flex: 1;
+  padding: 5px 0 16px;
+}
+
+.step-name {
+  margin-bottom: 10px;
+  font-size: 15px;
+  font-weight: 500;
+  color: #f8fafc;
+}
+
+.step-status {
+  width: 108px;
+  padding: 5px 0;
+  text-align: center;
+  border-radius: 8px;
+  font-size: 11px;
+}
+
+.step-status.completed {
+  background: #10382f;
+  color: #34d399;
+}
+
+.step-status.active {
+  background: #1645bf;
+  color: #93c5fd;
+}
+
+.step-status.pending {
+  background: #172438;
+  color: #b5c2d4;
+}
+
+.footer-divider {
+  margin: 3px 0 26px;
+}
+
+.progress-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  color: #cbd5e1;
+  font-size: 13px;
+}
+
+.progress-heading strong {
+  color: #60a5fa;
+  font-size: 16px;
+}
+
+.progress-track {
+  height: 8px;
+  background: #263449;
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: #3b82f6;
+  border-radius: 20px;
+  transition: width 0.4s ease;
+}
+
+@media (max-width: 600px) {
+  .workflow-panel {
+    width: min(320px, calc(100vw - 24px));
+    top: 12px;
+    right: 12px;
+    padding: 18px 14px;
+  }
+}
