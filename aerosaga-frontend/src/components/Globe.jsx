@@ -1,12 +1,13 @@
 import { useState, useEffect, useMemo, useRef, useCallback } from "react";
 import { Client } from "@stomp/stompjs";
-import { Viewer, Cartesian2, Cartesian3, Color } from "cesium";
+import { Viewer, Cartesian2, Cartesian3, Color, ScreenSpaceEventType, ScreenSpaceEventHandler } from "cesium";
 import "cesium/Build/Cesium/Widgets/widgets.css";
 
 function Globe() {
   const containerRef = useRef(null);
   const viewerRef = useRef(null);
   const clientRef = useRef(null);
+  const hoveredDroneRef = useRef(null);
 
   const [count] = useState(50);
   const [showLabels, setShowLabels] = useState(true);
@@ -99,11 +100,42 @@ function Globe() {
       homeButton: false,
       sceneModePicker: false,
       navigationHelpButton: false,
-      infoBox: false,
-      selectionIndicator: false,
+      infoBox: true,
+      selectionIndicator: true,
+      blurActiveElementOnCanvasFocus: false,
     });
 
     viewerRef.current = viewer;
+
+    const hoverHandler = new ScreenSpaceEventHandler(viewer.scene.canvas);
+    hoverHandler.setInputAction((movement) => {
+      const picked = viewer.scene.pick(movement.endPosition);
+      const pickedId = picked?.id?.id;
+
+      if (hoveredDroneRef.current && hoveredDroneRef.current !== pickedId) {
+        const previous = viewer.entities.getById(hoveredDroneRef.current);
+        if (previous?.point) {
+          previous.point.pixelSize = 9;
+          previous.point.color = Color.LIME;
+        }
+        hoveredDroneRef.current = null;
+      }
+
+      if (pickedId && /^Drone-\d+$/.test(pickedId)) {
+        const entity = viewer.entities.getById(pickedId);
+        if (entity?.point) {
+          entity.point.pixelSize = 14;
+          entity.point.color = Color.YELLOW;
+          hoveredDroneRef.current = pickedId;
+        }
+      }
+    }, ScreenSpaceEventType.MOUSE_MOVE);
+
+    viewerRef.current.hoverHandler = hoverHandler;
+
+    viewer.scene.screenSpaceCameraController.enableZoom = true;
+    viewer.scene.screenSpaceCameraController.enableRotate = true;
+    viewer.scene.screenSpaceCameraController.enableTranslate = true;
 
     viewer.camera.flyTo({
       destination: Cartesian3.fromDegrees(78.4867, 17.385, 2000000),
@@ -145,12 +177,17 @@ function Globe() {
     });
 
     return () => {
+      if (viewer.hoverHandler && !viewer.hoverHandler.isDestroyed()) {
+        viewer.hoverHandler.destroy();
+      }
+
       if (!viewer.isDestroyed()) {
         viewer.destroy();
       }
 
       viewerRef.current = null;
     };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [drones]);
 
   useEffect(() => {

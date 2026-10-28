@@ -52,3 +52,54 @@ body {
     white-space: normal;
   }
 }
+
+.mission-panel {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  z-index: 10;
+  padding: 15px;
+  width: 320px;
+  max-height: 80vh;
+  overflow-y: auto;
+
+  color: #ffffff;
+  background: rgba(0, 0, 0, 0.85);
+  border-radius: 8px;
+}
+
+.mission-panel h2 {
+  margin-top: 0;
+}
+
+.mission-panel form {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.mission-panel input {
+  flex: 1;
+  padding: 6px;
+}
+
+.mission-panel button {
+  padding: 6px 10px;
+  cursor: pointer;
+}
+
+.error {
+  color: #ff6b6b;
+}
+
+.mission-card {
+  border: 1px solid #444;
+  border-radius: 6px;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+.cesium-viewer-infoBoxContainer {
+  top: 90px !important;
+  right: 460px !important;
+}

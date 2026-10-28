@@ -1,5 +1,5 @@
 
-package com.aerosaga.aerosaga_backend;
+package com.aerosaga.aerosaga_backend.model;
 
 public class DroneTelemetry {
 

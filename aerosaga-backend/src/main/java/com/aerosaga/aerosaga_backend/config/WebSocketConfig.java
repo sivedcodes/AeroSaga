@@ -1,4 +1,4 @@
-package com.aerosaga.aerosaga_backend;
+package com.aerosaga.aerosaga_backend.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;

@@ -1,5 +1,5 @@
 
-package com.aerosaga.aerosaga_backend;
+package com.aerosaga.aerosaga_backend.controller;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;

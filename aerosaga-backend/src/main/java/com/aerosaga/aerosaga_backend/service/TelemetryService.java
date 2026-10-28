@@ -1,10 +1,12 @@
 
-package com.aerosaga.aerosaga_backend;
+package com.aerosaga.aerosaga_backend.service;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+
+import com.aerosaga.aerosaga_backend.model.DroneTelemetry;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
